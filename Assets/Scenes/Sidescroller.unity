@@ -239,7 +239,7 @@ Transform:
   m_GameObject: {fileID: 687193164}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.6370001, z: 0}
+  m_LocalPosition: {x: 0, y: -0.564, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1679,8 +1679,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1433354315}
-  - component: {fileID: 1433354314}
   - component: {fileID: 1433354313}
+  - component: {fileID: 1433354314}
   - component: {fileID: 1433354318}
   - component: {fileID: 1433354317}
   m_Layer: 0
@@ -1723,14 +1723,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 86a1ce42ea3e3dd44868493ae73ec06d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 0
-  maxSpeed: 5
-  acceleration: 4
-  deceleration: 4
   groundCheck: {fileID: 687193165}
   ground:
     serializedVersion: 2
     m_Bits: 8
+  maxSpeed: 5
+  accelerationTime: 0.3
+  decelerationTime: 0.1
+  apexHeight: 3
+  apexTime: 0.5
+  terminalSpeed: 10
+  coyoteTime: 0.5
+  isGround: 1
 --- !u!4 &1433354315
 Transform:
   m_ObjectHideFlags: 0
@@ -1740,7 +1744,7 @@ Transform:
   m_GameObject: {fileID: 1433354312}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 3.53, y: -2.3, z: 0}
+  m_LocalPosition: {x: 3.95, y: 3.88, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1779,7 +1783,7 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.060475707, y: -0.10523188}
+  m_Offset: {x: -0.060475707, y: -0.05803418}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -1790,7 +1794,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.8185923, y: 1.0885904}
+  m_Size: {x: 0.8185923, y: 0.994195}
   m_EdgeRadius: 0
 --- !u!50 &1433354318
 Rigidbody2D:
@@ -1807,7 +1811,7 @@ Rigidbody2D:
   m_Mass: 1
   m_LinearDrag: 1
   m_AngularDrag: 0.05
-  m_GravityScale: 0
+  m_GravityScale: 1
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
