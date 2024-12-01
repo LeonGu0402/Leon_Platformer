@@ -15,6 +15,8 @@ public class PlayerController : MonoBehaviour
     public float maxSpeed;
     public float accelerationTime;
     public float decelerationTime;
+    public float dashForce;
+    public float dashTime;
 
     [Header("Vertical")]
     public float apexHeight;
@@ -40,12 +42,12 @@ public class PlayerController : MonoBehaviour
     private float jumpSpeed;
     private float airTime;
     private float fallingTimer;
+    private float dashTimer = 0;
 
 
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
-
         //maxSpeedSqr = maxSpeed * maxSpeed;
     }
 
@@ -63,12 +65,15 @@ public class PlayerController : MonoBehaviour
         Gravity = -2 * apexHeight / (apexTime * apexTime);
         jumpSpeed = 2 * apexHeight / apexTime;
 
+
         rb.gravityScale = 0;
 
         playerInput.x = Input.GetAxisRaw("Horizontal");
 
+        Dash();
         MovementUpdate(playerInput);
         JumpUpdate();
+        
         //applying gravity
         if (!isGround)
         {
@@ -164,12 +169,18 @@ public class PlayerController : MonoBehaviour
         {
             currentdirection = FacingDirection.right;
         }
+        //countdown dash timer
+        dashTimer -= Time.deltaTime;
 
         if (playerInput.x != 0)
         {
             //accelerate
             velocity.x += acceleration * playerInput.x * Time.deltaTime;
-            velocity.x = Mathf.Clamp(velocity.x, -maxSpeed, maxSpeed);
+            //clamp speed when dash is over
+            if (dashTimer <= 0)
+            {
+                velocity.x = Mathf.Clamp(velocity.x, -maxSpeed, maxSpeed);
+            }
         }
         else
         {
@@ -246,7 +257,24 @@ public class PlayerController : MonoBehaviour
 
         //terminal falling speed
         velocity.y = Mathf.Max(velocity.y, -terminalSpeed);
+    }
 
+
+    private void Dash()
+    {
+        if (Input.GetKeyDown(KeyCode.LeftShift))
+        {
+            //dash timer start
+            dashTimer = dashTime;
+            if (currentdirection == FacingDirection.left)
+            {
+                velocity.x += -dashForce;
+            }
+            else if ((currentdirection == FacingDirection.right))
+            {
+                velocity.x += +dashForce;
+            }
+        }
     }
 
 
