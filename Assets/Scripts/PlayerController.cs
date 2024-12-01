@@ -22,12 +22,16 @@ public class PlayerController : MonoBehaviour
     public float apexHeight;
     public float apexTime;
     public float terminalSpeed;
-    public float coyoteTime;
+    //public float coyoteTime;
 
     [Header("Ground Check")]
     public bool isGround;
+    public bool isWallJump;
     public float groundCheckOffset = 0.5f;
     public Vector2 groundCheckSize = new Vector2(0.4f, 0.1f);
+    public float wallJumpCheckOffset = 0.5f;
+    public float wallJumpCheckSize = 0.5f;
+    public float wallJumpTimes = 1f;
     public LayerMask groundCheckMask;
 
 
@@ -40,9 +44,10 @@ public class PlayerController : MonoBehaviour
     //private bool isJump;
     private float Gravity;
     private float jumpSpeed;
-    private float airTime;
-    private float fallingTimer;
+    //private float airTime;
+    //private float fallingTimer;
     private float dashTimer = 0;
+    private float wallJumpCounter;
 
 
     void Start()
@@ -86,6 +91,7 @@ public class PlayerController : MonoBehaviour
 
         rb.velocity = velocity;
 
+        Debug.Log(wallJumpCounter);
     }
 
     private void FixedUpdate()
@@ -199,7 +205,7 @@ public class PlayerController : MonoBehaviour
 
     }
 
-
+    
     //old jump
     //private void Jumping()
     //{
@@ -253,6 +259,33 @@ public class PlayerController : MonoBehaviour
         {
             velocity.y = jumpSpeed;
             isGround = false;
+            wallJumpCounter = wallJumpTimes;
+        }
+
+        //adding checks besides player
+        if (Physics2D.OverlapCircle(transform.position + Vector3.right * wallJumpCheckOffset, wallJumpCheckSize, groundCheckMask) || 
+            Physics2D.OverlapCircle(transform.position + Vector3.left * wallJumpCheckOffset, wallJumpCheckSize, groundCheckMask))
+        {
+            isWallJump = true;
+        }
+        else
+        {
+            isWallJump = false;
+        }
+
+        //reset the walljump times
+        if (isGround)
+        {
+            
+        }
+        //wall jump
+        if (!isGround && isWallJump && wallJumpCounter > 0)
+        {
+            if (Input.GetButtonDown("Jump"))
+            {
+                wallJumpCounter -= 1;
+                velocity.y = jumpSpeed;
+            }   
         }
 
         //terminal falling speed
@@ -294,6 +327,12 @@ public class PlayerController : MonoBehaviour
     private void CheckForGround()
     {
         isGround = Physics2D.OverlapBox(transform.position + Vector3.down * groundCheckOffset, groundCheckSize, 0, groundCheckMask);
+    }
+    public void OnDrawGizmos()
+    {
+        Gizmos.DrawWireCube(transform.position + Vector3.down * groundCheckOffset, groundCheckSize);
+        Gizmos.DrawWireSphere(transform.position + Vector3.right * wallJumpCheckOffset, wallJumpCheckSize);
+        Gizmos.DrawWireSphere(transform.position + Vector3.left * wallJumpCheckOffset, wallJumpCheckSize);
     }
     public bool IsGrounded()
     {
