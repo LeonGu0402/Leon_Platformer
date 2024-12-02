@@ -90,8 +90,6 @@ public class PlayerController : MonoBehaviour
         }
 
         rb.velocity = velocity;
-
-        Debug.Log(wallJumpCounter);
     }
 
     private void FixedUpdate()
