@@ -88,12 +88,11 @@ public class PlayerController : MonoBehaviour
         {
             velocity.y = 0;
         }
-
-        rb.velocity = velocity;
     }
 
     private void FixedUpdate()
     {
+        rb.velocity = velocity;
     }
 
 
@@ -293,7 +292,7 @@ public class PlayerController : MonoBehaviour
 
     private void Dash()
     {
-        if (Input.GetKeyDown(KeyCode.LeftShift))
+        if (Input.GetKeyDown(KeyCode.LeftShift) && IsWalking() == true)
         {
             //dash timer start
             dashTimer = dashTime;
