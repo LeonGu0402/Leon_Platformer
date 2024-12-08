@@ -256,25 +256,34 @@ public class PlayerController : MonoBehaviour
         {
             velocity.y = jumpSpeed;
             isGround = false;
+            //reset the walljump times
             wallJumpCounter = wallJumpTimes;
         }
 
+        wallJump();
+
+        //terminal falling speed
+        velocity.y = Mathf.Max(velocity.y, -terminalSpeed);
+    }
+
+
+    //wall jump
+    private void wallJump()
+    {
         //adding checks besides player
-        if (Physics2D.OverlapCircle(transform.position + Vector3.right * wallJumpCheckOffset, wallJumpCheckSize, groundCheckMask) || 
+        if (!isGround)
+        {
+            if (Physics2D.OverlapCircle(transform.position + Vector3.right * wallJumpCheckOffset, wallJumpCheckSize, groundCheckMask) ||
             Physics2D.OverlapCircle(transform.position + Vector3.left * wallJumpCheckOffset, wallJumpCheckSize, groundCheckMask))
-        {
-            isWallJump = true;
-        }
-        else
-        {
-            isWallJump = false;
+            {
+                isWallJump = true;
+            }
+            else
+            {
+                isWallJump = false;
+            }
         }
 
-        //reset the walljump times
-        if (isGround)
-        {
-            
-        }
         //wall jump
         if (!isGround && isWallJump && wallJumpCounter > 0)
         {
@@ -282,17 +291,25 @@ public class PlayerController : MonoBehaviour
             {
                 wallJumpCounter -= 1;
                 velocity.y = jumpSpeed;
-            }   
+
+                //force to left or right
+                if (Physics2D.OverlapCircle(transform.position + Vector3.right * wallJumpCheckOffset, wallJumpCheckSize, groundCheckMask))
+                {
+                    currentdirection = FacingDirection.left;
+                    velocity.x -= jumpSpeed;
+                }
+                if (Physics2D.OverlapCircle(transform.position + Vector3.left * wallJumpCheckOffset, wallJumpCheckSize, groundCheckMask))
+                {
+                    currentdirection = FacingDirection.right;
+                    velocity.x += jumpSpeed;
+                }
+            }
         }
-
-        //terminal falling speed
-        velocity.y = Mathf.Max(velocity.y, -terminalSpeed);
     }
-
 
     private void Dash()
     {
-        if (Input.GetKeyDown(KeyCode.LeftShift) && IsWalking() == true)
+        if (Input.GetKeyDown(KeyCode.LeftShift) && IsWalking() == true && dashTimer <= 0)
         {
             //dash timer start
             dashTimer = dashTime;
